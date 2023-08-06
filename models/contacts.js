@@ -48,10 +48,11 @@ const addContact = catchAsync(async (req, res, next) => {
 
   res.status(201).json(newContact)
 
-  // return newContact;
 })
 
 const updateContact = async (contactId, body) => {
+  
+
   const list = await listContacts();
   const indexUpdateContact = list.findIndex(item => item.id === contactId);
   const contact = await getContactById(contactId);

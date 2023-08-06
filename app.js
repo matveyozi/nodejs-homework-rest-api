@@ -19,7 +19,7 @@ app.use((req, res) => {
 })
 
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({ message: err.message })
+  res.status(err.status || 500).json({ message: err.message.includes('ValidationError') ? err.message.split(':')[1].trim() : err.message })
 })
 
 module.exports = app

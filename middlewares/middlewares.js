@@ -7,13 +7,15 @@ const checkUserById = catchAsync(async (req, res, next) => {
 
 	const contactById = await getContactById(contactId);
 
-	if (!contactById) return next(new AppError(404, 'Not found...'));
+	if (!contactById) return next(new AppError(404, 'Not found'));
 
 	req.contact = contactById;
 
 	next();
 
 })
+
+
 
 module.exports = {
 	checkUserById
