@@ -1,22 +1,17 @@
-const AppError = require("../utils/appError");
-
-
+const { HttpError } = require('../utils');
 
 const validateBody = (schema) => {
-	const func = (req, res, next) => {
-		if (!req.body || Object.keys(req.body).length === 0) {
-			next(new AppError(400, "missing fields"));
-		}
+	const fn = (req, _, next) => {
 		const { error } = schema.validate(req.body);
+
 		if (error) {
-			next(new AppError(400, error.message));
+			next(HttpError(400, error.message));
 		}
+
 		next();
 	};
-	
-	return func;
+
+	return fn;
 };
 
-module.exports = {
-	validateBody,
-};
+module.exports = validateBody;
