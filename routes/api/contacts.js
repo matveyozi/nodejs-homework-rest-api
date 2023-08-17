@@ -1,30 +1,32 @@
-const express = require('express')
-// const { listContacts, getContactById, removeContact, addContact, updateContact } = require('../../models/contacts');
-// const AppError = require('../../utils/appError');
-// const { createUserDataValidator } = require('../../helpers/dataValidator');
-// const catchAsync = require('../../utils/catchAsync');
-const { ctrlContactList, cntrlGetContactById, cntrlDeleteContact, cntrlPutContact, cntrlAddContact } = require('../../controllers/controllers');
-const { addContact } = require('../../models/contacts');
-const { checkUserById } = require('../../middlewares/middlewares');
-const { validateBody } = require('../../middlewares/validateBody');
-const { createUserDataValidator } = require('../../helpers/dataValidator');
-const { addSchema } = require('../../utils/userValidators');
+const express = require('express');
+
+const {
+	ctrlListContacts,
+	ctrlAddContact,
+	ctrlGetContactById,
+	ctrlRemoveContact,
+	ctrlUpdateContact,
+} = require('../../controllers/ctrlContacts');
+
+const { validateBody, isValidId } = require('../../middlewares');
+
+const { schemaBodyObject, schemaBody, schemaStatusContact } = require('../../schema');
+
 const router = express.Router();
 
-router.get('/', ctrlContactList)
+router
+	.route('/')
+	.get(ctrlListContacts)
+	.post(validateBody(schemaBodyObject), validateBody(schemaBody), ctrlAddContact);
 
+router
+	.route('/:contactId')
+	.get(isValidId, ctrlGetContactById)
+	.put(isValidId, validateBody(schemaBodyObject), validateBody(schemaBody), ctrlUpdateContact)
+	.delete(isValidId, ctrlRemoveContact);
 
-router.get('/:contactId', checkUserById, cntrlGetContactById)
+router
+	.route('/:contactId/favorite')
+	.patch(isValidId, validateBody(schemaStatusContact), ctrlUpdateContact);
 
-router.post('/', addContact)
-
-
-
-router.delete('/:contactId', checkUserById, cntrlDeleteContact)
-
-router.put('/:contactId', checkUserById, cntrlPutContact)
-
-
-
-
-module.exports = router
+module.exports = router;
