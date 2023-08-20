@@ -1,23 +1,16 @@
-const mongoose = require('mongoose');
+const app = require("./app");
+const mongoose = require("mongoose");
 
-const app = require('./app');
+const { DB_HOST } = process.env;
 
-const port = process.env.PORT || 3000;
-const url = process.env.MONGO_URL;
-
-// MongoDB Connection==========================
 mongoose
-  .connect(url)
+  .connect(DB_HOST)
   .then(() => {
-    // Port connection
-    app.listen(port, () => {
-      console.log(`Server running. Use our API on port: ${port}`);
+    app.listen(3000, () => {
+      console.log("Database connection successful");
     });
-
-    console.log('Database connection successful');
   })
-  .catch((err) => {
-    console.log(err.message);
-
+  .catch((error) => {
+    console.log(error.message);
     process.exit(1);
   });
